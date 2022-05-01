@@ -1,0 +1,5 @@
+##TARGET_PATH##/assets
+##TARGET_PATH##/mix-manifest.json
+node_modules
+package.json
+package-lock.json

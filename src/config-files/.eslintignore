@@ -1,0 +1,3 @@
+##TARGET_PATH##/assets
+.eslintrc.js
+webpack.mix.js

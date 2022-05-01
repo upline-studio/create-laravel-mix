@@ -1,0 +1,6 @@
+.idea
+node_modules
+
+#compiling files
+##TARGET_PATH##/assets
+##TARGET_PATH##/mix-manifest.json
