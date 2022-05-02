@@ -1,8 +1,8 @@
 {
-  "name": "@upline/create-laravel-mix",
+  "name": "@up-line/create-laravel-mix",
   "version": "1.0.0",
   "description": "Laravel mix scaffold that we use",
-  "main": "src/index.mjs",
+  "bin": "./src/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
