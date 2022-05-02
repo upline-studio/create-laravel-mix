@@ -1,6 +1,6 @@
 {
   "name": "@up-line/create-laravel-mix",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Laravel mix scaffold that we use",
   "bin": "./src/index.mjs",
   "scripts": {
