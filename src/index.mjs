@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import fs from "fs-extra";
 import replace from "replace";
 import prompts from "prompts";
