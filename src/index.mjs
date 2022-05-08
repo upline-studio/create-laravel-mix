@@ -64,10 +64,10 @@ if (!confirm) {
 await fs.copy(path.resolve(__dirname, "config-files"), tempDir);
 
 await replace({
-  regex: "##SORUCE_PATH##",
+  regex: "##SOURCE_PATH##",
   replacement: source,
   paths: [tempDir],
-  recursive: false,
+  recursive: true,
   silent: false,
 });
 
@@ -75,7 +75,7 @@ await replace({
   regex: "##TARGET_PATH##",
   replacement: destination,
   paths: [tempDir],
-  recursive: false,
+  recursive: true,
   silent: false,
 });
 

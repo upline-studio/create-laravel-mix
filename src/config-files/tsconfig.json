@@ -11,9 +11,9 @@
     "noImplicitAny": true, // Bypass raising errors on `any` type,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "~/*": ["./##SORUCE_PATH##/*"],
-      "@/*": ["./##SORUCE_PATH##/*"]
+      "~/*": ["./##SOURCE_PATH##/*"],
+      "@/*": ["./##SOURCE_PATH##/*"]
     }
   },
-  "include": ["##SORUCE_PATH##/js/**/*"] // Frontend paths pattern
+  "include": ["##SOURCE_PATH##/js/**/*"] // Frontend paths pattern
 }

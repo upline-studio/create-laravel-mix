@@ -17,12 +17,12 @@ mix
     },
   })
   .webpackConfig(config)
-  .ts('##SORUCE_PATH##/js/app.ts', `${RESOURCE_PUBLIC_PATH}/js`)
-  .sass('##SORUCE_PATH##/scss/app.scss', `${RESOURCE_PUBLIC_PATH}/css`)
+  .ts('##SOURCE_PATH##/js/app.ts', `${RESOURCE_PUBLIC_PATH}/js`)
+  .sass('##SOURCE_PATH##/scss/app.scss', `${RESOURCE_PUBLIC_PATH}/css`)
   .setPublicPath(PUBLIC_ROOT_DIRECTORY)
   .setResourceRoot(RESOURCE_ROOT_PREFIX)
   .svgSprite(
-    '##SORUCE_PATH##/icons', // The directory containing your SVG files
+    '##SOURCE_PATH##/icons', // The directory containing your SVG files
     `${RESOURCE_PUBLIC_PATH}/sprite.svg` // The output path for the sprite
   )
   .version();

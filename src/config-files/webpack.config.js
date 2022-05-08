@@ -5,7 +5,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.json', '.vue'],
     alias: {
-      '~': path.resolve(__dirname, './##SORUCE_PATH##'),
+      '~': path.resolve(__dirname, './##SOURCE_PATH##'),
     },
   },
 };

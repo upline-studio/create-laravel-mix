@@ -8,8 +8,8 @@
     "production": "mix --production",
     "test": "npm run prettier-check && npm run eslint-check && npm run stylelint-check",
     "prettier-check": "prettier --check ..",
-    "eslint-check": "eslint ##SOURCES_URL##",
-    "stylelint-check": "stylelint ##SOURCES_URL##/**/*.{scss,css}",
+    "eslint-check": "eslint ##SOURCE_PATH##",
+    "stylelint-check": "stylelint ##SOURCE_PATH##/**/*.{scss,css}",
     "start": "npx serve public"
   },
   "devDependencies": {
