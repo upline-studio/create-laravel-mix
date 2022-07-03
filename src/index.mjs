@@ -10,8 +10,6 @@ import os from "os";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mix-"));
-
 const prompt = async (config) => {
   return (
     await prompts(
@@ -61,25 +59,58 @@ if (!confirm) {
   console.log("As you wish.\nCreating process is aborted.");
 }
 
-await fs.copy(path.resolve(__dirname, "config-files"), tempDir);
+async function copyAndReplace(from, to) {
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "mix-"));
+  await fs.copy(from, tempDir);
 
-await replace({
-  regex: "##SOURCE_PATH##",
-  replacement: source,
-  paths: [tempDir],
-  recursive: true,
-  silent: false,
-});
+  await replace({
+    regex: "##SOURCE_PATH##",
+    replacement: source,
+    paths: [tempDir],
+    recursive: true,
+    silent: false,
+  });
 
-await replace({
-  regex: "##TARGET_PATH##",
-  replacement: destination,
-  paths: [tempDir],
-  recursive: true,
-  silent: false,
-});
+  await replace({
+    regex: "##TARGET_PATH##",
+    replacement: destination,
+    paths: [tempDir],
+    recursive: true,
+    silent: false,
+  });
 
-await fs.copy(tempDir, projectPath);
+  await fs.copy(tempDir, to, {
+    filter: (file) => file !== "package.json",
+  });
+  const packageJson = await mergeJsonFile(
+    path.resolve(destination, "package.json"),
+    path.resolve(tempDir, "package.json")
+  );
+  fs.writeJson(path.resolve(destination, "package.json"), packageJson);
+}
+
+async function mergeJsonFile(...files) {
+  const promises = files.map(async (file) => {
+    try {
+      return await fs.readJson(file);
+    } catch (e) {
+      return {};
+    }
+  });
+  const fileContents = await Promise.all(promises);
+  return fileContents.reduce((result, json) => {
+    return {
+      ...result,
+      ...json,
+    };
+  }, {});
+}
+
+await copyAndReplace(
+  path.resolve(__dirname, "src/template/linters", projectPath)
+);
+
+await copyAndReplace(path.resolve(__dirname, "src/template/mix", projectPath));
 
 console.log("Now run:");
 if (projectName) {

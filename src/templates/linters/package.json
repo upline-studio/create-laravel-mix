@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "test": "npm run prettier-check && npm run eslint-check && npm run stylelint-check",
+    "prettier-check": "prettier --check .",
+    "eslint-check": "eslint ##SOURCE_PATH##",
+    "stylelint-check": "stylelint ##SOURCE_PATH##/**/*.{scss,css}"
+  },
+  "devDependencies": {
+    "@up-line/eslint-config": "^1.0.0",
+    "@up-line/stylelint-config": "^1.0.0",
+    "prettier": "^2.4.1"
+  }
+}
