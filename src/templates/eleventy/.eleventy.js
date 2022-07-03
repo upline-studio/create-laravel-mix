@@ -7,7 +7,7 @@ module.exports = function () {
   return {
     dir: {
       input: "pages",
-      output: "dist",
+      output: "public",
       includes: "includes",
       layouts: "layouts",
       data: "data",

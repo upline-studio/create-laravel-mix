@@ -87,7 +87,7 @@ async function copyAndReplace(from, to) {
     },
   });
 
-  await addToPackageJson(from);
+  await addToPackageJson(tempDir);
 }
 
 async function mergeJsonFile(...files) {
