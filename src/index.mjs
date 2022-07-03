@@ -6,6 +6,7 @@ import prompts from "prompts";
 import path from "path";
 import { fileURLToPath } from "url";
 import os from "os";
+import merge from "lodash.merge";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +58,7 @@ console.log("\n");
 
 if (!confirm) {
   console.log("As you wish.\nCreating process is aborted.");
+  process.exit(0);
 }
 
 async function copyAndReplace(from, to) {
@@ -80,13 +82,12 @@ async function copyAndReplace(from, to) {
   });
 
   await fs.copy(tempDir, to, {
-    filter: (file) => file !== "package.json",
+    filter: (file) => {
+      return path.basename(file) !== "package.json";
+    },
   });
-  const packageJson = await mergeJsonFile(
-    path.resolve(destination, "package.json"),
-    path.resolve(tempDir, "package.json")
-  );
-  fs.writeJson(path.resolve(destination, "package.json"), packageJson);
+
+  await addToPackageJson(from);
 }
 
 async function mergeJsonFile(...files) {
@@ -98,19 +99,50 @@ async function mergeJsonFile(...files) {
     }
   });
   const fileContents = await Promise.all(promises);
+  console.log(fileContents);
   return fileContents.reduce((result, json) => {
-    return {
-      ...result,
-      ...json,
-    };
+    return merge(result, json);
   }, {});
 }
 
-await copyAndReplace(
-  path.resolve(__dirname, "src/template/linters", projectPath)
-);
+async function addToPackageJson(filePath) {
+  const packageJson = await mergeJsonFile(
+    path.resolve(projectPath, "package.json"),
+    path.resolve(filePath, "package.json")
+  );
+  await fs.writeJson(path.resolve(projectPath, "package.json"), packageJson, {
+    spaces: 4,
+  });
+}
 
-await copyAndReplace(path.resolve(__dirname, "src/template/mix", projectPath));
+await copyAndReplace(path.resolve(__dirname, "templates/linters"), projectPath);
+
+await copyAndReplace(path.resolve(__dirname, "templates/mix"), projectPath);
+
+const isScaffoldNeeded = await prompt({
+  type: "confirm",
+  message: `\nCreate scaffold asset files`,
+  validate: (value) => value.length > 0,
+});
+
+if (isScaffoldNeeded) {
+  await copyAndReplace(
+    path.resolve(__dirname, "templates/mix-scaffold"),
+    path.resolve(projectPath, source)
+  );
+}
+const isEleventyNeeded = await prompt({
+  type: "confirm",
+  message: `\nInstall 11ty`,
+  validate: (value) => value.length > 0,
+});
+
+if (isEleventyNeeded) {
+  await copyAndReplace(
+    path.resolve(__dirname, "templates/eleventy"),
+    path.resolve(projectPath)
+  );
+}
 
 console.log("Now run:");
 if (projectName) {

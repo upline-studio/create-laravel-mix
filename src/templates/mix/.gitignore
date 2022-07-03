@@ -2,5 +2,6 @@
 node_modules
 
 #compiling files
+/dist
 ##TARGET_PATH##/assets
 ##TARGET_PATH##/mix-manifest.json
