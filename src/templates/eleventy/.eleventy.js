@@ -6,7 +6,7 @@ module.exports = function () {
     : "/";
   return {
     dir: {
-      input: "pages",
+      input: "eleventy",
       output: "public",
       includes: "includes",
       layouts: "layouts",
