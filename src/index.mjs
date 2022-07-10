@@ -83,11 +83,15 @@ async function copyAndReplace(from, to) {
 
   await fs.copy(tempDir, to, {
     filter: (file) => {
-      return path.basename(file) !== 'package.json';
+      return (
+        path.basename(file) !== 'package.json' &&
+        path.basename(file) !== '.gitignore-template'
+      );
     },
   });
 
   await addToPackageJson(tempDir);
+  await addToGitIgnore(tempDir);
 }
 
 async function mergeJsonFile(...files) {
@@ -112,6 +116,23 @@ async function addToPackageJson(filePath) {
   await fs.writeJson(path.resolve(projectPath, 'package.json'), packageJson, {
     spaces: 4,
   });
+}
+
+async function readContentIfExist(filePath) {
+  const exists = await fs.exists(filePath);
+  if (!exists) {
+    return '';
+  }
+  return await fs.readFile(filePath);
+}
+
+async function addToGitIgnore(filePath) {
+  const projectFile = path.join(projectPath, '.gitignore');
+  const content = await Promise.all([
+    readContentIfExist(projectFile),
+    readContentIfExist(path.resolve(filePath, '.gitignore-template')),
+  ]);
+  await fs.writeFile(projectFile, content.join(''));
 }
 
 await copyAndReplace(path.resolve(__dirname, 'templates/linters'), projectPath);
