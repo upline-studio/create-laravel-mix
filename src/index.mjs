@@ -70,7 +70,7 @@ async function copyAndReplace(from, to) {
     replacement: source,
     paths: [tempDir],
     recursive: true,
-    silent: false,
+    silent: true,
   });
 
   await replace({
@@ -78,7 +78,7 @@ async function copyAndReplace(from, to) {
     replacement: destination,
     paths: [tempDir],
     recursive: true,
-    silent: false,
+    silent: true,
   });
 
   await fs.copy(tempDir, to, {
