@@ -1,22 +1,22 @@
-const { URL } = require("url");
+const { URL } = require('url');
 
 module.exports = function () {
   const pathPrefix = process.env.ELEVENTY_FULL_ROOT_URL
     ? new URL(process.env.ELEVENTY_FULL_ROOT_URL).pathname
-    : "/";
+    : '/';
   return {
     dir: {
-      input: "eleventy",
-      output: "public",
-      includes: "includes",
-      layouts: "layouts",
-      data: "data",
+      input: 'eleventy',
+      output: 'public',
+      includes: 'includes',
+      layouts: 'layouts',
+      data: 'data',
     },
-    dataTemplateEngine: "njk",
+    dataTemplateEngine: 'njk',
     markdownTemplateEngine: false,
-    htmlTemplateEngine: "njk",
+    htmlTemplateEngine: 'njk',
     passthroughFileCopy: true,
-    templateFormats: ["md", "njk"],
+    templateFormats: ['md', 'njk'],
     pathPrefix,
   };
 };
