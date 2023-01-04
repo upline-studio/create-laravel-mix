@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from 'fs-extra';
+import { readFile } from 'fs/promises';
 import replace from 'replace';
 import prompts from 'prompts';
 import path from 'path';
@@ -93,6 +94,10 @@ async function copyAndReplace(from, to) {
 
   await addToPackageJson(tempDir);
   await addToGitIgnore(tempDir);
+  await appendToFile(
+    path.resolve(projectPath, '.gitlab-ci.yml'),
+    path.resolve(tempDir, '.gitlab-ci.yml')
+  );
 }
 
 async function mergeJsonFile(...files) {
@@ -112,12 +117,14 @@ async function mergeJsonFile(...files) {
 async function concatFiles(...files) {
   const promises = files.map(async (file) => {
     try {
-      return await fs.read(file);
+      return await readFile(file);
     } catch (e) {
-      return {};
+      return '';
     }
   });
   const fileContents = await Promise.all(promises);
+  console.log('files', files);
+  console.log('contents', fileContents);
   return fileContents.join('\n');
 }
 
@@ -131,25 +138,17 @@ async function addToPackageJson(filePath) {
   });
 }
 
-async function readContentIfExist(filePath) {
-  const exists = await fs.exists(filePath);
-  if (!exists) {
-    return '';
-  }
-  return await fs.readFile(filePath);
-}
-
 async function addToGitIgnore(filePath) {
   const projectFile = path.join(projectPath, '.gitignore');
-  const content = await concatFiles([
+  const content = await concatFiles(
     projectFile,
-    path.resolve(filePath, '.gitignore-template'),
-  ]);
+    path.resolve(filePath, '.gitignore-template')
+  );
   await fs.writeFile(projectFile, content);
 }
 
 async function appendToFile(projectFile, filePath) {
-  const content = await concatFiles([projectFile, filePath]);
+  const content = await concatFiles(projectFile, filePath);
   await fs.writeFile(projectFile, content);
 }
 
@@ -179,10 +178,6 @@ if (isEleventyNeeded) {
   await copyAndReplace(
     path.resolve(__dirname, 'templates/eleventy'),
     path.resolve(projectPath)
-  );
-  await appendToFile(
-    path.resolve(projectPath, '.gitlab-ci.yml'),
-    path.resolve(__dirname, 'templates/eleventy/.gitlab-ci.yml')
   );
 }
 
