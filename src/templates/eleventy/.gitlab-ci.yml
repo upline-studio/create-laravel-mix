@@ -1,0 +1,9 @@
+build:eleventy:
+  stage: build
+  extends: .node
+  script:
+    - npm run build:eleventy
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day

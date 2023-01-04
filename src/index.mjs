@@ -85,6 +85,7 @@ async function copyAndReplace(from, to) {
     filter: (file) => {
       return (
         path.basename(file) !== 'package.json' &&
+        path.basename(file) !== '.gitlab-ci.yml' &&
         path.basename(file) !== '.gitignore-template'
       );
     },
@@ -108,6 +109,18 @@ async function mergeJsonFile(...files) {
   }, {});
 }
 
+async function concatFiles(...files) {
+  const promises = files.map(async (file) => {
+    try {
+      return await fs.read(file);
+    } catch (e) {
+      return {};
+    }
+  });
+  const fileContents = await Promise.all(promises);
+  return fileContents.join('\n');
+}
+
 async function addToPackageJson(filePath) {
   const packageJson = await mergeJsonFile(
     path.resolve(projectPath, 'package.json'),
@@ -128,11 +141,16 @@ async function readContentIfExist(filePath) {
 
 async function addToGitIgnore(filePath) {
   const projectFile = path.join(projectPath, '.gitignore');
-  const content = await Promise.all([
-    readContentIfExist(projectFile),
-    readContentIfExist(path.resolve(filePath, '.gitignore-template')),
+  const content = await concatFiles([
+    projectFile,
+    path.resolve(filePath, '.gitignore-template'),
   ]);
-  await fs.writeFile(projectFile, content.join(''));
+  await fs.writeFile(projectFile, content);
+}
+
+async function appendToFile(projectFile, filePath) {
+  const content = await concatFiles([projectFile, filePath]);
+  await fs.writeFile(projectFile, content);
 }
 
 await copyAndReplace(path.resolve(__dirname, 'templates/linters'), projectPath);
@@ -161,6 +179,10 @@ if (isEleventyNeeded) {
   await copyAndReplace(
     path.resolve(__dirname, 'templates/eleventy'),
     path.resolve(projectPath)
+  );
+  await appendToFile(
+    path.resolve(projectPath, '.gitlab-ci.yml'),
+    path.resolve(__dirname, 'templates/eleventy/.gitlab-ci.yml')
   );
 }
 

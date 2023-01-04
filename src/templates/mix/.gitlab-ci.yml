@@ -57,7 +57,7 @@ stylelint:
 pages:
   stage: deploy
   script:
-    - '[ $CI_PAGES_URL ] && find public -type f -name "*.html" -exec sed -i "s@/assets/@$CI_PAGES_URL/assets/@g" {} \;'
+    - echo "Do nothing"
   artifacts:
     paths:
       - public

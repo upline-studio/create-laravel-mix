@@ -3,6 +3,7 @@
     "@11ty/eleventy": "^1.0.1"
   },
   "scripts": {
+    "build:eleventy": "eleventy",
     "start": "eleventy --serve --quiet"
   }
 }
