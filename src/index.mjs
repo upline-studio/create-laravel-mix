@@ -123,8 +123,6 @@ async function concatFiles(...files) {
     }
   });
   const fileContents = await Promise.all(promises);
-  console.log('files', files);
-  console.log('contents', fileContents);
   return fileContents.join('\n');
 }
 
