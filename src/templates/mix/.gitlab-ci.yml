@@ -30,8 +30,7 @@ build:
     - npm run build:eleventy
   artifacts:
     paths:
-      - public/assets
-      - public/mix-manifest.json
+      - public
     expire_in: 1 day
 
 prettier:
