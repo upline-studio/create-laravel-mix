@@ -27,6 +27,7 @@ build:
   extends: .node
   script:
     - npm run production
+    - npm run build:eleventy
   artifacts:
     paths:
       - public/assets
